@@ -1,0 +1,22 @@
+{
+  "Name" : "${ORTHANC_NAME} in Docker Compose",
+  "RemoteAccessAllowed" : true,
+  "StorageCompression": false,
+  "TcpNoDelay": true,
+  "KeepAlive": true,
+  "PostgreSQL" : {
+    "EnableIndex" : true,
+    "EnableStorage" : false,
+    "IndexConnectionsCount": 50,
+    "Host" : "postgres",
+    "Port" : 5432,
+    "Database" : "orthanc",
+    "Username" : "orthanc",
+    "Password" : "orthanc",
+    "EnableSsl" : false,               // New in release 3.0
+    "MaximumConnectionRetries" : 10,   // New in release 3.0
+    "ConnectionRetryInterval" : 5,     // New in release 3.0
+    "TransactionMode": "Serializable", // New in release 6.0
+    "EnableVerboseLogs": true        // New in release 6.0
+  }
+}
