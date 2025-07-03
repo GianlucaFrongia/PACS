@@ -1,0 +1,28 @@
+2024-03-05 18:37:24,433 - WARNING - [4/630] Fehler beim Senden der temp/004p1011.dcm:, 200, {
+   "ID" : "4685358c-266c1a0c-2e01f712-d6250f78-b34787dd",
+   "ParentPatient" : "03fc96df-7ab96080-ff0aa61a-6bf74c66-5ea7faaf",
+   "ParentSeries" : "eac647c5-69e20fa1-f5e9cb69-23b7cd0b-5ce77304",
+   "ParentStudy" : "fe81708c-8b0010bb-93690775-9fd184ac-f9fed345",
+   "Path" : "/instances/4685358c-266c1a0c-2e01f712-d6250f78-b34787dd",
+   "Status" : "Success"
+}
+2024-03-05 19:09:34,483 - WARNING - [4/630] Fehler beim Senden der temp/004p1011.dcm:, 200, {
+   "ID" : "365aab40-790bed02-114e6a09-106c8f2d-abe85501",
+   "ParentPatient" : "03fc96df-7ab96080-ff0aa61a-6bf74c66-5ea7faaf",
+   "ParentSeries" : "1cbb3936-741e0de7-20a53853-2591b679-ab5d8018",
+   "ParentStudy" : "1eba0a94-72917ec1-f81fc2aa-8000ba38-f2ea5356",
+   "Path" : "/instances/365aab40-790bed02-114e6a09-106c8f2d-abe85501",
+   "Status" : "Success"
+}
+
+2024-04-06 12:44:07,398 - WARNING - [105/630] Fehler beim Senden der temp/.DS_Store:, 400, {
+	"Details" : "Cannot parse an invalid DICOM file (size: 6148 bytes)",
+	"HttpError" : "Bad Request",
+	"HttpStatus" : 400,
+	"Message" : "Bad file format",
+	"Method" : "POST",
+	"OrthancError" : "Bad file format",
+	"OrthancStatus" : 15,
+	"Uri" : "/instances"
+}
+

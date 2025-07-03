@@ -1,0 +1,22 @@
+spring:
+    datasource:
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:mem:dcbapp
+        username: sa
+        password: password
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+    h2:
+        console:
+            enabled: true
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost/auth/realms/FHNW-LST-MI
+server:
+    compression:
+        enabled: true
+    port: 8080
+    servlet:
+        context-path: "/server"

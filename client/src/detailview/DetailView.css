@@ -1,0 +1,46 @@
+.mainContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.comments{
+    flex: 1;
+}
+
+.right{
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    height: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: -1px 0px rgb(0 0 0 / 0.2);
+    flex-shrink: 0;
+}
+
+.commentButton{
+ text-align: right;
+}
+.commentField *, .tags *, .description *{
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    width: 73vw;
+    height: 87.5vh;
+    margin-top: 4px;
+}
+
+.image-container img {
+    object-fit: contain;
+    min-height: 84.5vh;
+}
+

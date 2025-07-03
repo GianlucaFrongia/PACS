@@ -1,0 +1,134 @@
+volumes:
+    postgres-data:
+    orthanc-storage:
+    sonarqube_data:
+    sonarqube_extensions:
+    sonarqube_logs:
+    prometheus-data:
+    grafana-data:
+
+
+services:
+  server-api:
+    container_name: server-api
+    build:
+      dockerfile: ./server-image.Dockerfile
+    ports:
+      - "8082:8080"
+    networks:
+      - histofy
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=orthanc
+      - POSTGRES_PASSWORD=orthanc
+      - POSTGRES_DB=orthanc
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - histofy
+
+  orthanc:
+    image: orthancteam/orthanc:22.6.1
+    volumes:
+      - ./orthanc.json:/temp/orthanc.json
+      - ./orthanc-storage:/var/lib/orthanc/db
+    ports:
+      - 4242:4242
+      - 8042:8042
+    environment:
+      ORTHANC_NAME: HelloWorld
+      ORTHANC_POSTGRESQL_PLUGIN_ENABLED: true
+    networks:
+      - histofy
+
+  nginx_web:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./client/dist:/usr/share/nginx/html
+      - ./etc/etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - histofy
+  
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--web.external-url=/prometheus/'
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+    networks:
+      - histofy
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_ROOT_URL=https://v000563.fhnw.ch/grafana
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana.yaml:/etc/grafana/provisioning/datasources/grafana.yaml
+    restart: unless-stopped
+    networks:
+      - histofy
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node_exporter
+    command: '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - histofy
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    command:
+      - '-port=8098'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    restart: unless-stopped
+    networks:
+      - histofy
+
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   command: certonly --reinstall --webroot --webroot-path=/var/www/certbot --email gianluca.frongia@students.fhnw.ch -d v000563.fhnw.ch --agree-tos
+  #   volumes:
+  #     - ./etc/letsencrypt:/etc/letsencrypt
+  #     - ./certbot/data:/var/www/certbot
+  #   depends_on:
+  #     - nginx_web
+
+networks:
+  histofy:
+    driver: bridge

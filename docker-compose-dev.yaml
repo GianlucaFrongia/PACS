@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: ["start-dev", "--import-realm", "--proxy-headers=xforwarded", "--hostname-strict=false"]
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_RELATIVE_PATH: /auth
+    ports:
+      - 8081:8080
+    volumes:
+      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
+    networks:
+      - histofy
+
+  orthanc:
+    image: jodogne/orthanc-plugins:1.12.3
+    command: /run/secrets/  # Path to the configuration files (stored as secrets)
+    ports:
+      - 4242:4242
+      - 8042:8042
+    secrets:
+      - orthanc.json
+    environment:
+      - ORTHANC_NAME=HelloWorld
+
+  nginx_web:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-dev.conf:/etc/nginx/nginx.conf
+    networks:
+      - histofy
+
+secrets:
+  orthanc.json:
+    file: orthanc.json
+
+networks:
+  histofy:
+    driver: bridge
